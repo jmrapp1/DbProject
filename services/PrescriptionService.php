@@ -41,6 +41,28 @@ final class PrescriptionService
         return new ServiceError('Please enter a valid date.');
     }
 
+    function fulfillPrescription($prescriptionId)
+    {
+        $prescription = $this->getPrescription($prescriptionId);
+        if ($prescription !== null) {
+            $newRefills = $prescription->Refills_Left - 1;
+            if ($newRefills > 0) {
+                // Remove 1 from the refills and update
+                $statement = $this->db->prepare('UPDATE `prescriptions` SET Refills_Left = :newRefillsLeft WHERE Prescription_ID = :prescriptionId');
+                $statement->bindParam(':newRefillsLeft', $newRefills);
+                $statement->bindParam(':prescriptionId', $prescriptionId);
+                $statement->execute();
+                return true;
+            }
+            // Delete the prescription because there's no refills left
+            $statement = $this->db->prepare('DELETE FROM `prescriptions` WHERE Prescription_ID = :prescriptionId');
+            $statement->bindParam(':prescriptionId', $prescriptionId);
+            $statement->execute();
+            return true;
+        }
+        return new ServiceError('A prescription with that ID does not exist.');
+    }
+
     function getPrescription($id)
     {
         $statement = $this->db->prepare('SELECT * FROM `prescriptions` WHERE `Prescription_ID` = :id');
