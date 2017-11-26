@@ -21,3 +21,8 @@ if (isset($_POST['name']) && isset($_POST['title'])) {
 } else {
     $_SESSION['error'] = 'Please enter a name and title for the employee.';
 }
+
+// Redirect where needed
+if (isset($_POST['redirect'])) {
+    header('Location: ' . $_POST['redirect']);
+}

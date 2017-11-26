@@ -20,3 +20,8 @@ if (isset($_POST['prescriptionId'])) {
 } else {
     $_SESSION['error'] = 'Please enter the prescription ID.';
 }
+
+// Redirect where needed
+if (isset($_POST['redirect'])) {
+    header('Location: ' . $_POST['redirect']);
+}

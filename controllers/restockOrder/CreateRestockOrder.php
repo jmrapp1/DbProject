@@ -22,3 +22,8 @@ if (isset($_POST['employeeId']) && isset($_POST['medId']) && isset($_POST['date'
 } else {
     $_SESSION['error'] = 'Please enter the employee ID, medicine ID, and the date.';
 }
+
+// Redirect where needed
+if (isset($_POST['redirect'])) {
+    header('Location: ' . $_POST['redirect']);
+}

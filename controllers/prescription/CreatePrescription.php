@@ -24,3 +24,8 @@ if (isset($_POST['date']) && isset($_POST['refillsLeft']) && isset($_POST['custo
 } else {
     $_SESSION['error'] = 'Please enter the date, number of refills, customer, prescribing doctor, and the medicine.';
 }
+
+// Redirect where needed
+if (isset($_POST['redirect'])) {
+    header('Location: ' . $_POST['redirect']);
+}

@@ -21,3 +21,8 @@ if (isset($_POST['prescriptionId']) && isset($_POST['date'])) {
 } else {
     $_SESSION['error'] = 'Please enter the prescription ID and the date.';
 }
+
+// Redirect where needed
+if (isset($_POST['redirect'])) {
+    header('Location: ' . $_POST['redirect']);
+}

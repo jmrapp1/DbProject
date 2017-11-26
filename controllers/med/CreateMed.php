@@ -21,3 +21,8 @@ if (isset($_POST['name']) && isset($_POST['stock'])) {
 } else {
     $_SESSION['error'] = 'Please enter a name and stock amount for the medicine.';
 }
+
+// Redirect where needed
+if (isset($_POST['redirect'])) {
+    header('Location: ' . $_POST['redirect']);
+}
