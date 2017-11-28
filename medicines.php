@@ -18,6 +18,7 @@ require_once("services/MedService.php");
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css"
           integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="styles/styles.css">
+    <script src="https://use.fontawesome.com/2b90d30d0a.js"></script>
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
             integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
             crossorigin="anonymous"></script>
@@ -66,7 +67,13 @@ require_once("services/MedService.php");
                                 echo '<td>' . $med["Med_ID"] . '</td>';
                                 echo '<td>' . $med["Name"] . '</td>';
                                 echo '<td>' . $med["Stock_Amount"] . '</td>';
-                                echo '<td></td>';
+                                echo '<td>
+                                        <form id="newCustomerForm" method="POST" action="controllers/med/DeleteMed.php">
+                                        <input type="hidden" name="redirect" value="../../medicines.php"/>
+                                        <input type="hidden" name="med-id" value="' . $med["Med_ID"] . '" />
+                                        <button class="btn btn-md btn-danger"><i class="fa fa-trash"></i></button>
+                                        </form>
+                                     </td>';
                                 echo '</tr>';
                             }
                             ?>

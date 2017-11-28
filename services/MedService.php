@@ -55,6 +55,12 @@ final class MedService
         return new ServiceError('A medicine with that ID does not exist.');
     }
 
+    function deleteMed($medId) {
+        $statement = $this->db->prepare('DELETE FROM `meds` WHERE Med_ID = :medId');
+        $statement->bindParam(':medId', $medId);
+        $statement->execute();
+    }
+
     function getAllMeds()
     {
         $statement = $this->db->prepare('SELECT * FROM `meds`');
