@@ -50,50 +50,77 @@ require_once('services/ServiceError.php');
         </div>
         <div id="content" class="col-md-10">
             <div id="inner-content">
-                <h2>Customers</h2>
-                <hr/>
+                <div id="customers">
+                    <h2>Customers</h2>
+                    <hr/>
 
-                <div class="panel panel-default">
-                    <table class="table table-striped">
-                        <thead>
-                        <tr>
-                            <th scope="col">Name</th>
-                            <th scope="col">Address</th>
-                            <th scope="col">Doctor ID</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td>Bob Joe</td>
-                            <td>123 Main Street</td>
-                            <td>12</td>
-                        </tr>
-                        <tr>
-                            <td>Bob Joe</td>
-                            <td>123 Main Street</td>
-                            <td>12</td>
-                        </tr>
-                        <tr>
-                            <td>Bob Joe</td>
-                            <td>123 Main Street</td>
-                            <td>12</td>
-                        </tr>
-                        <tr>
-                            <td>Bob Joe</td>
-                            <td>123 Main Street</td>
-                            <td>12</td>
-                        </tr>
-                        <tr>
-                            <td>Bob Joe</td>
-                            <td>123 Main Street</td>
-                            <td>12</td>
-                        </tr>
-                        </tbody>
-                    </table>
+                    <div class="panel panel-default">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th scope="col">Name</th>
+                                <th scope="col">Address</th>
+                                <th scope="col">Doctor ID</th>
+                                <th scope="col"></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>Bob Joe</td>
+                                <td>123 Main Street</td>
+                                <td>12</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Bob Joe</td>
+                                <td>123 Main Street</td>
+                                <td>12</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Bob Joe</td>
+                                <td>123 Main Street</td>
+                                <td>12</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Bob Joe</td>
+                                <td>123 Main Street</td>
+                                <td>12</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Bob Joe</td>
+                                <td>123 Main Street</td>
+                                <td>12</td>
+                                <td></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div id="new-customer">
+                    <h2>New Customer</h2>
+                    <hr/>
+                    <form id="newCustomerForm">
+                        <div class="input-group col-md-4">
+                            <input class="form-control" type="text" name="name" placeholder="Name" autofocus>
+                        </div>
+                        <div class="input-group col-md-4">
+                            <input class="form-control" type="text" name="address" placeholder="Address">
+                        </div>
+                        <div class="input-group col-md-4">
+                            <input class="form-control" type="text" name="doctorId" placeholder="Doctor ID">
+                        </div>
+                        <div class="col-md-2">
+                            <button type="button" class="btn btn-secondary align-items-center">Create Customer</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
+</div>
 </div>
 </body>
 </html>

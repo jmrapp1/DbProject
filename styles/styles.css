@@ -44,6 +44,22 @@
     border-radius: 4px;
 }
 
+.col-md-4, .col-md-2 {
+    padding: 0;
+}
+
+.input-group {
+    margin-bottom: 15px;
+}
+
+/** CUSTOMERS PAGE **/
+
+#new-customer {
+    margin-top: 30px;
+}
+
+/** END CUSTOMERS PAGE **/
+
 @media only screen and (min-width : 481px) {
     .flex-row {
         display: flex;
@@ -104,6 +120,7 @@ thead {
     background-color: #30302f;
     box-shadow: inset 0px 0px 16px 0px #101319, inset 0px 0px 0px 1px #0c0e13;
     box-sizing: border-box;
+    color: white;
 }
 
 td, th {
@@ -111,11 +128,13 @@ td, th {
 }
 
 .table-striped > tbody > tr:nth-child(1n), .table-striped > tbody > tr:nth-child(1n) {
-    background-color: #FFFFFF;
+    background-color: #3f3f3e;
+    color: #e4e4e4;
 }
 
 .table-striped > tbody > tr:nth-child(2n), .table-striped > tbody > tr:nth-child(2n) {
-    background-color: #e2e2e2;
+    background-color: #686867;
+    color: #e4e4e4;
 }
 
 .table-striped > tbody > tr:hover {
@@ -134,7 +153,7 @@ table {
 }
 
 .table td, .table th, .panel {
-    border-color: #8d8d8d !important;
+    border-color: #272727 !important;
 }
 
 /** END TABLES **/
