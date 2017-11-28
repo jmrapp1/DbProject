@@ -51,6 +51,46 @@ require_once('services/ServiceError.php');
         <div id="content" class="col-md-10">
             <div id="inner-content">
                 <h2>Customers</h2>
+                <hr/>
+
+                <div class="panel panel-default">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th scope="col">Name</th>
+                            <th scope="col">Address</th>
+                            <th scope="col">Doctor ID</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>Bob Joe</td>
+                            <td>123 Main Street</td>
+                            <td>12</td>
+                        </tr>
+                        <tr>
+                            <td>Bob Joe</td>
+                            <td>123 Main Street</td>
+                            <td>12</td>
+                        </tr>
+                        <tr>
+                            <td>Bob Joe</td>
+                            <td>123 Main Street</td>
+                            <td>12</td>
+                        </tr>
+                        <tr>
+                            <td>Bob Joe</td>
+                            <td>123 Main Street</td>
+                            <td>12</td>
+                        </tr>
+                        <tr>
+                            <td>Bob Joe</td>
+                            <td>123 Main Street</td>
+                            <td>12</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>

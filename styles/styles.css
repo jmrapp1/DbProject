@@ -36,7 +36,7 @@
 #inner-content {
     margin: 30px;
     padding: 30px;
-    background: #d3d3d2;
+    background: #f1f1f0;
 
     -moz-border-radius: 4px;
     -webkit-border-radius: 4px;
@@ -93,3 +93,49 @@ a::selection, a::-moz-selection, a::-webkit-keygen-select {
     color: #3f4041;
     text-decoration: none;
 }
+
+/** TABLES **/
+
+thead {
+    color: white;
+}
+
+.table-striped > thead {
+    background-color: #30302f;
+    box-shadow: inset 0px 0px 16px 0px #101319, inset 0px 0px 0px 1px #0c0e13;
+    box-sizing: border-box;
+}
+
+td, th {
+    padding: 15px !important;
+}
+
+.table-striped > tbody > tr:nth-child(1n), .table-striped > tbody > tr:nth-child(1n) {
+    background-color: #FFFFFF;
+}
+
+.table-striped > tbody > tr:nth-child(2n), .table-striped > tbody > tr:nth-child(2n) {
+    background-color: #e2e2e2;
+}
+
+.table-striped > tbody > tr:hover {
+    background-color: #d0d0d0;
+    color: black;
+    -o-transition: 0.25s;
+    -ms-transition: 0.25s;
+    -moz-transition: 0.25s;
+    -webkit-transition: 0.25s;
+    transition: 0.25s;
+}
+
+table {
+    table-layout: fixed;
+    word-wrap: break-word;
+}
+
+.table td, .table th, .panel {
+    border-color: #8d8d8d !important;
+}
+
+/** END TABLES **/
+
