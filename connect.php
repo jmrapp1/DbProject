@@ -15,6 +15,7 @@ $password = '';
 try {
     global $db;
     $db = new PDO('mysql:host=localhost;dbname=dbproject', $username, $password);
+    session_start();
 
     MedService::Instance()->setDb($db);
     RestockOrderService::Instance()->setDb($db);

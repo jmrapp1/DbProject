@@ -4,12 +4,7 @@
  * Date: 11/26/17
  */
 require_once("connect.php");
-require_once('services/MedService.php');
-require_once('services/RestockOrderService.php');
-require_once('services/EmployeeService.php');
-require_once('services/PrescriptionService.php');
-require_once('services/ServiceError.php');
-
+require_once("services/MedService.php");
 ?>
 
 <!DOCTYPE html>
@@ -50,7 +45,61 @@ require_once('services/ServiceError.php');
         </div>
         <div id="content" class="col-md-10">
             <div id="inner-content">
-                <h2>Medicines</h2>
+                <div id="medicines">
+                    <h2>Medicines</h2>
+                    <hr/>
+
+                    <div class="panel panel-default">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th scope="col">ID</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Stock</th>
+                                <th scope="col"></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <?php
+                            foreach (MedService::Instance()->getAllMeds() as $med) {
+                                echo '<tr>';
+                                echo '<td>' . $med["Med_ID"] . '</td>';
+                                echo '<td>' . $med["Name"] . '</td>';
+                                echo '<td>' . $med["Stock_Amount"] . '</td>';
+                                echo '<td></td>';
+                                echo '</tr>';
+                            }
+                            ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div id="new-medicine">
+                    <h2>New Medicine</h2>
+                    <hr/>
+                    <?php
+                    if (isset($_SESSION['error'])) {
+                        echo '<p class="error">' . $_SESSION['error'] . '</p>';
+                        $_SESSION['error'] = '';
+                    }
+                    if (isset($_SESSION['success'])) {
+                        echo '<p class="success">' . $_SESSION['success'] . '</p>';
+                        $_SESSION['success'] = '';
+                    }
+                    ?>
+                    <form id="newCustomerForm" method="POST" action="controllers/med/CreateMed.php">
+                        <input type="hidden" name="redirect" value="../../medicines.php"/>
+                        <div class="input-group col-md-4">
+                            <input class="form-control" type="text" name="name" placeholder="Name" autofocus>
+                        </div>
+                        <div class="input-group col-md-4">
+                            <input class="form-control" type="number" name="stock" placeholder="Stock">
+                        </div>
+                        <div class="col-md-2">
+                            <button type="submit" class="btn btn-secondary align-items-center">Create Medicine</button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>

@@ -55,7 +55,15 @@ final class MedService
         return new ServiceError('A medicine with that ID does not exist.');
     }
 
-    function getMed($id) {
+    function getAllMeds()
+    {
+        $statement = $this->db->prepare('SELECT * FROM `meds`');
+        $statement->execute();
+        return $statement->fetchAll();
+    }
+
+    function getMed($id)
+    {
         $statement = $this->db->prepare('SELECT * FROM `meds` WHERE `Med_ID` = :id');
         $statement->bindParam(':id', $id);
         $statement->execute();
@@ -65,14 +73,16 @@ final class MedService
         return null;
     }
 
-    function doesMedExist($name) {
+    function doesMedExist($name)
+    {
         $statement = $this->db->prepare('SELECT COUNT(*) FROM `meds` WHERE `Name` = :name');
         $statement->bindParam(':name', $name);
         $statement->execute();
         return $statement->fetchColumn() > 0;
     }
 
-    function setDb($db) {
+    function setDb($db)
+    {
         $this->db = $db;
     }
 

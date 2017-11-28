@@ -71,30 +71,6 @@ require_once('services/ServiceError.php');
                                 <td>12</td>
                                 <td></td>
                             </tr>
-                            <tr>
-                                <td>Bob Joe</td>
-                                <td>123 Main Street</td>
-                                <td>12</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td>Bob Joe</td>
-                                <td>123 Main Street</td>
-                                <td>12</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td>Bob Joe</td>
-                                <td>123 Main Street</td>
-                                <td>12</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td>Bob Joe</td>
-                                <td>123 Main Street</td>
-                                <td>12</td>
-                                <td></td>
-                            </tr>
                             </tbody>
                         </table>
                     </div>

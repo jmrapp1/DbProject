@@ -52,6 +52,14 @@
     margin-bottom: 15px;
 }
 
+.error {
+    color: red;
+}
+
+.success {
+    color: #00b500;
+}
+
 /** CUSTOMERS PAGE **/
 
 #new-customer {
@@ -59,6 +67,14 @@
 }
 
 /** END CUSTOMERS PAGE **/
+
+/** MEDICINES PAGE **/
+
+#new-medicine {
+    margin-top: 30px;
+}
+
+/** END MEDICINES PAGE **/
 
 @media only screen and (min-width : 481px) {
     .flex-row {
@@ -128,12 +144,12 @@ td, th {
 }
 
 .table-striped > tbody > tr:nth-child(1n), .table-striped > tbody > tr:nth-child(1n) {
-    background-color: #3f3f3e;
+    background-color: #868E95;
     color: #e4e4e4;
 }
 
 .table-striped > tbody > tr:nth-child(2n), .table-striped > tbody > tr:nth-child(2n) {
-    background-color: #686867;
+    background-color: #585c63;
     color: #e4e4e4;
 }
 
