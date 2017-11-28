@@ -33,6 +33,28 @@ final class MedService
         return false;
     }
 
+    function removeMedStock($medId)
+    {
+        $med = $this->getMed($medId);
+        if ($med !== null) {
+            $newStockLeft = $med->Stock_Amount - 1;
+            if ($newStockLeft > 0) {
+                // Remove 1 from the stock and update
+                $statement = $this->db->prepare('UPDATE `meds` SET Stock_Amount = :newStockLeft WHERE Med_ID = :medId');
+                $statement->bindParam(':newStockLeft', $newStockLeft);
+                $statement->bindParam(':medId', $med);
+                $statement->execute();
+                return true;
+            }
+            // Delete the med because there's no stock left
+            $statement = $this->db->prepare('DELETE FROM `meds` WHERE Med_ID = :medId');
+            $statement->bindParam(':medId', $medId);
+            $statement->execute();
+            return true;
+        }
+        return new ServiceError('A medicine with that ID does not exist.');
+    }
+
     function getMed($id) {
         $statement = $this->db->prepare('SELECT * FROM `meds` WHERE `Med_ID` = :id');
         $statement->bindParam(':id', $id);
