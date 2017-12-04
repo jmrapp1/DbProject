@@ -3,6 +3,7 @@
  * User: jonrapp
  * Date: 11/26/17
  */
+require_once("DatabaseService.php");
 require_once('MedService.php');
 require_once('ServiceError.php');
 

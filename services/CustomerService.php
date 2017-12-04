@@ -1,11 +1,11 @@
 <?php
 /**
  * User: jonrapp
- * Date: 11/26/17
+ * Date: 12/3/17
  */
 require_once("DatabaseService.php");
 
-final class EmployeeService
+final class CustomerService
 {
     private $db;
 
@@ -13,7 +13,7 @@ final class EmployeeService
     {
         static $inst = null;
         if ($inst === null) {
-            $inst = new EmployeeService();
+            $inst = new CustomerService();
         }
         return $inst;
     }
@@ -22,18 +22,21 @@ final class EmployeeService
     {
     }
 
-    function createEmployee($name, $title)
+    function createCustomer()
     {
-        $statement = $this->db->prepare('INSERT INTO `employees` (Name, Title) VALUES (:name, :title)');
-        $statement->bindParam(':name', $name);
-        $statement->bindParam(':title', $title);
-        $statement->execute();
-        return $this->db->lastInsertId();
+        return false;
     }
 
-    function getEmployee($id)
+    function getAllCustomers()
     {
-        $statement = $this->db->prepare('SELECT * FROM `employees` WHERE `Employee_ID` = :id');
+        $statement = $this->db->prepare('SELECT * FROM `Customer`');
+        $statement->execute();
+        return $statement->fetchAll();
+    }
+
+    function getCustomer($id)
+    {
+        $statement = $this->db->prepare('SELECT * FROM `Customer` WHERE `Customer_ID` = :id');
         $statement->bindParam(':id', $id);
         $statement->execute();
         if ($statement->rowCount() > 0) {

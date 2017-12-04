@@ -3,11 +3,9 @@
  * User: jonrapp
  * Date: 11/26/17
  */
-require_once("connect.php");
-require_once('services/MedService.php');
-require_once('services/RestockOrderService.php');
-require_once('services/EmployeeService.php');
+require_once("services/DatabaseService.php");
 require_once('services/PrescriptionService.php');
+require_once('services/CustomerService.php');
 require_once('services/ServiceError.php');
 
 ?>
@@ -50,7 +48,92 @@ require_once('services/ServiceError.php');
         </div>
         <div id="content" class="col-md-10">
             <div id="inner-content">
-                <h2>Prescriptions</h2>
+                <div id="medicines">
+                    <h2>Prescriptions</h2>
+                    <hr/>
+
+                    <div class="panel panel-default">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th scope="col">ID</th>
+                                <th scope="col">Medicine</th>
+                                <th scope="col">Date</th>
+                                <th scope="col">Refills Left</th>
+                                <th scope="col">Customer</th>
+                                <th scope="col">Doctor</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <?php
+                            foreach (PrescriptionService::Instance()->getAllPrescriptions() as $pres) {
+                                echo '<tr>';
+                                echo '<td>' . $pres["Prescription_ID"] . '</td>';
+                                echo '<td>' . $pres["MedName"] . '</td>';
+                                echo '<td>' . $pres["Date_Prescribed"] . '</td>';
+                                echo '<td>' . $pres["Refills_Left"] . '</td>';
+                                echo '<td>' . $pres["CustName"] . '</td>';
+                                echo '<td>' . $pres["DocName"] . '</td>';
+                                echo '</tr>';
+                            }
+                            ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div id="new-prescription">
+                    <h2>New Prescription</h2>
+                    <hr/>
+                    <?php
+                    if (isset($_SESSION['error'])) {
+                        echo '<p class="error">' . $_SESSION['error'] . '</p>';
+                        $_SESSION['error'] = '';
+                    }
+                    if (isset($_SESSION['success'])) {
+                        echo '<p class="success">' . $_SESSION['success'] . '</p>';
+                        $_SESSION['success'] = '';
+                    }
+                    ?>
+                    <form id="newCustomerForm" method="POST" action="controllers/prescription/CreatePrescription.php">
+                        <input type="hidden" name="redirect" value="../../prescriptions.php"/>
+                        <div class="input-group col-md-4">
+                            <select class="form-control" name="medId">
+                                <option value="-1">Select Medicine</option>
+                                <?php
+                                foreach (MedService::Instance()->getAllMeds() as $med) {
+                                    echo "<option value=\"" . $med['Med_ID'] . "\">" . $med['Name'] . "</option>";
+                                }
+                                ?>
+                            </select>
+                        </div>
+                        <div class="input-group col-md-4">
+                            <select class="form-control" name="doctorId">
+                                <option value="-1">Select Doctor</option>
+                                <?php
+                                foreach (DoctorService::Instance()->getAllDoctors() as $doc) {
+                                    echo "<option value=\"" . $doc['Doctor_ID'] . "\">" . $doc['Name'] . "</option>";
+                                }
+                                ?>
+                            </select>
+                        </div>
+                        <div class="input-group col-md-4">
+                            <select class="form-control" name="customerId">
+                                <option value="-1">Select Customer</option>
+                                <?php
+                                foreach (CustomerService::Instance()->getAllCustomers() as $customer) {
+                                    echo "<option value=\"" . $customer['Customer_ID'] . "\">" . $customer['Customer_Name'] . "</option>";
+                                }
+                                ?>
+                            </select>
+                        </div>
+                        <div class="input-group col-md-4">
+                            <input class="form-control" type="number" name="refillsLeft" placeholder="Refills Left">
+                        </div>
+                        <div class="col-md-2">
+                            <button type="submit" class="btn btn-secondary align-items-center">Create Medicine</button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>

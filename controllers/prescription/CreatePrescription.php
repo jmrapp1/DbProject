@@ -6,8 +6,8 @@
 require_once('../../services/PrescriptionService.php');
 require_once('../../services/ServiceError.php');
 
-if (isset($_POST['date']) && isset($_POST['refillsLeft']) && isset($_POST['customerId']) && isset($_POST['doctorId']) && isset($_POST['medId'])) {
-    $date = $_POST['date'];
+if (isset($_POST['refillsLeft']) && isset($_POST['customerId']) && isset($_POST['doctorId']) && isset($_POST['medId'])) {
+    $date = date("Y-m-d H:i:s");
     $refillsLeft = $_POST['refillsLeft'];
     $customerId = $_POST['customerId'];
     $doctorId = $_POST['doctorId'];
@@ -19,11 +19,12 @@ if (isset($_POST['date']) && isset($_POST['refillsLeft']) && isset($_POST['custo
         $_SESSION['error'] = $res->getError();
     } else {
         $_SESSION['error'] = '';
-        $_SESSION['success'] = true;
+        $_SESSION['success'] = 'The prescription has been created.';
     }
 } else {
     $_SESSION['error'] = 'Please enter the date, number of refills, customer, prescribing doctor, and the medicine.';
 }
+echo $_SESSION['error'];
 
 // Redirect where needed
 if (isset($_POST['redirect'])) {

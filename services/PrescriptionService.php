@@ -3,6 +3,10 @@
  * User: jonrapp
  * Date: 11/26/17
  */
+require_once('DatabaseService.php');
+require_once('MedService.php');
+require_once('CustomerService.php');
+require_once('DoctorService.php');
 
 final class PrescriptionService
 {
@@ -24,21 +28,26 @@ final class PrescriptionService
     // TODO: Validate customer and doctors exist (need to wait for Nick's code)
     function createPrescription($date, $refillsLeft, $customerId, $doctorId, $medId)
     {
-        if ($this->isRealDate($date)) {
-            $med = MedService::Instance()->getMed($medId);
-            if ($med !== null) {
-                $statement = $this->db->prepare('INSERT INTO `prescriptions` (Date_Prescribed, Refills_Left, Customer_ID, Doctor_ID, Med_ID) VALUES (:date, :refills, :customerId, :doctorId, :medId)');
-                $statement->bindParam(':date', date("Y-m-d H:i:s", strtotime($date)), PDO::PARAM_STR);
-                $statement->bindParam(':refills', $refillsLeft);
-                $statement->bindParam(':customerId', $customerId);
-                $statement->bindParam(':doctorId', $doctorId);
-                $statement->bindParam(':medId', $medId);
-                $statement->execute();
-                return $this->db->lastInsertId();
+        $customer = CustomerService::Instance()->getCustomer($customerId);
+        if ($customer !== null) {
+            $doctor = DoctorService::Instance()->getDoctor($doctorId);
+            if ($doctor !== null) {
+                $med = MedService::Instance()->getMed($medId);
+                if ($med !== null) {
+                    $statement = $this->db->prepare('INSERT INTO `prescriptions` (Date_Prescribed, Refills_Left, Customer_ID, Doctor_ID, Med_ID) VALUES (:date, :refills, :customerId, :doctorId, :medId)');
+                    $statement->bindParam(':date', date("Y-m-d H:i:s", strtotime($date)), PDO::PARAM_STR);
+                    $statement->bindParam(':refills', $refillsLeft);
+                    $statement->bindParam(':customerId', $customerId);
+                    $statement->bindParam(':doctorId', $doctorId);
+                    $statement->bindParam(':medId', $medId);
+                    $statement->execute();
+                    return $this->db->lastInsertId();
+                }
+                return new ServiceError('A medicine with that ID does not exist.');
             }
-            return new ServiceError('A medicine with that ID does not exist.');
+            return new ServiceError('A doctor with that ID does not exist.');
         }
-        return new ServiceError('Please enter a valid date.');
+        return new ServiceError('A customer with that ID does not exist.');
     }
 
     function fulfillPrescription($prescriptionId)
@@ -63,6 +72,20 @@ final class PrescriptionService
         return new ServiceError('A prescription with that ID does not exist.');
     }
 
+    function getAllPrescriptions()
+    {
+        // SELECT u.*, s.* FROM users u inner join statuses s on u.status_id = s.id
+        $statement = $this->db->prepare('
+          SELECT p.*, m.Name as MedName, d.Name as DocName, c.Customer_Name as CustName
+          FROM `prescriptions` p 
+          inner join `meds` m ON p.Med_ID = m.Med_ID 
+          inner join `doctors` d ON p.Doctor_ID = d.Doctor_ID
+          inner join `Customer` c on p.Customer_ID = c.Customer_ID
+          ');
+        $statement->execute();
+        return $statement->fetchAll();
+    }
+
     function getPrescription($id)
     {
         $statement = $this->db->prepare('SELECT * FROM `prescriptions` WHERE `Prescription_ID` = :id');
@@ -72,15 +95,6 @@ final class PrescriptionService
             return $statement->fetch(PDO::FETCH_OBJ);
         }
         return null;
-    }
-
-    function isRealDate($date)
-    {
-        if (false === strtotime($date)) {
-            return false;
-        }
-        list($year, $month, $day) = explode('-', $date);
-        return checkdate($month, $day, $year);
     }
 
     function setDb($db)
