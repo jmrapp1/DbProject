@@ -6,21 +6,22 @@
 require_once('../../services/RestockOrderService.php');
 require_once('../../services/ServiceError.php');
 
-if (isset($_POST['employeeId']) && isset($_POST['medId']) && isset($_POST['date'])) {
+if (isset($_POST['employeeId']) && isset($_POST['medId']) && isset($_POST['orderAmount']) && !empty($_POST['orderAmount'])) {
     $employeeId = $_POST['employeeId'];
     $medId = $_POST['medId'];
-    $date = $_POST['date'];
+    $date = date('Y-m-d H:i:s');
+    $orderAmount = $_POST['orderAmount'];
 
-    $res = RestockOrderService::Instance()->createOrder($employeeId, $medId, $date);
+    $res = RestockOrderService::Instance()->createOrder($employeeId, $medId, $orderAmount, $date);
 
     if ($res instanceof ServiceError) {
         $_SESSION['error'] = $res->getError();
     } else {
         $_SESSION['error'] = '';
-        $_SESSION['success'] = true;
+        $_SESSION['success'] = 'The order was created.';
     }
 } else {
-    $_SESSION['error'] = 'Please enter the employee ID, medicine ID, and the date.';
+    $_SESSION['error'] = 'Please select the employee, medicine, order amount, and the date.';
 }
 
 // Redirect where needed

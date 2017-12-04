@@ -6,7 +6,7 @@
 require_once('../../services/CustomerOrderService.php');
 require_once('../../services/ServiceError.php');
 
-if (isset($_POST['orderAmount']) && isset($_POST['employeeId']) && isset($_POST['prescriptionId']) && !empty($_POST['orderAmount'])) {
+if (isset($_POST['orderAmount']) && isset($_POST['employeeId']) && isset($_POST['prescriptionId']) && !empty($_POST['orderAmount']) && !empty($_POST['orderAmount'])) {
     $orderAmount = $_POST['orderAmount'];
     $date = date('Y-m-d H:i:s');
     $employeeId = $_POST['employeeId'];

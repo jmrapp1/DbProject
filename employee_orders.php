@@ -5,8 +5,7 @@
  */
 require_once("services/DatabaseService.php");
 require_once('services/PrescriptionService.php');
-require_once('services/CustomerOrderService.php');
-require_once('services/EmployeeService.php');
+require_once('services/CustomerService.php');
 require_once('services/ServiceError.php');
 
 ?>
@@ -52,7 +51,7 @@ require_once('services/ServiceError.php');
         <div id="content" class="col-md-10">
             <div id="inner-content">
                 <div id="orders">
-                    <h2>Customer Orders</h2>
+                    <h2>Employee Restock Orders</h2>
                     <hr/>
 
                     <div class="panel panel-default">
@@ -60,7 +59,7 @@ require_once('services/ServiceError.php');
                             <thead>
                             <tr>
                                 <th scope="col">ID</th>
-                                <th scope="col">Prescription</th>
+                                <th scope="col">Medicine</th>
                                 <th scope="col">Employee</th>
                                 <th scope="col">Order Amount</th>
                                 <th scope="col">Date</th>
@@ -68,10 +67,10 @@ require_once('services/ServiceError.php');
                             </thead>
                             <tbody>
                             <?php
-                            foreach (CustomerOrderService::Instance()->getAllOrders() as $order) {
+                            foreach (RestockOrderService::Instance()->getAllOrders() as $order) {
                                 echo '<tr>';
-                                echo '<td>' . $order["Customer_Order_ID"] . '</td>';
-                                echo '<td>' . $order['MedName'] . ' for ' . $order['CustName'] . ' - ' . $order['Refills_Left'] . ' Refills Left</td>';
+                                echo '<td>' . $order["Restock_Order_ID"] . '</td>';
+                                echo '<td>' . $order['MedName'] . '</td>';
                                 echo '<td>' . $order["EmployeeName"] . '</td>';
                                 echo '<td>' . $order["Order_Amount"] . '</td>';
                                 echo '<td>' . $order["Date_Ordered"] . '</td>';
@@ -95,8 +94,8 @@ require_once('services/ServiceError.php');
                         $_SESSION['success'] = '';
                     }
                     ?>
-                    <form method="POST" action="controllers/customerOrder/CreateCustomerOrder.php">
-                        <input type="hidden" name="redirect" value="../../customer_orders.php"/>
+                    <form method="POST" action="controllers/restockOrder/CreateRestockOrder.php">
+                        <input type="hidden" name="redirect" value="../../employee_orders.php"/>
                         <div class="input-group col-md-4">
                             <select class="form-control" name="employeeId">
                                 <option value="-1">Select Employee To Create Order</option>
@@ -108,11 +107,11 @@ require_once('services/ServiceError.php');
                             </select>
                         </div>
                         <div class="input-group col-md-4">
-                            <select class="form-control" name="prescriptionId">
-                                <option value="-1">Select Prescription</option>
+                            <select class="form-control" name="medId">
+                                <option value="-1">Select Medicine</option>
                                 <?php
-                                foreach (PrescriptionService::Instance()->getAllPrescriptions() as $pres) {
-                                    echo "<option value=\"" . $pres['Prescription_ID'] . "\">" . $pres['MedName'] . " for " . $pres['CustName'] . " - " . $pres['Refills_Left'] . " Refills Left</option>";
+                                foreach (MedService::Instance()->getAllMeds() as $med) {
+                                    echo "<option value=\"" . $med['Med_ID'] . "\">" . $med['Name'] . "</option>";
                                 }
                                 ?>
                             </select>

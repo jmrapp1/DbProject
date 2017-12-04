@@ -24,25 +24,35 @@ final class RestockOrderService
     {
     }
 
-    function createOrder($employeeId, $medId, $date)
+    function createOrder($employeeId, $medId, $orderAmount, $date)
     {
-        if ($this->isRealDate($date)) {
-            $med = MedService::Instance()->getMed($medId);
-            if ($med !== null) {
-                $employee = EmployeeService::Instance()->getEmployee($employeeId);
-                if ($employee !== null) {
-                    $statement = $this->db->prepare('INSERT INTO `Restock_Orders` (Employee_ID, Med_ID, Order_Date) VALUES (:employeeId, :medId, :date)');
-                    $statement->bindParam(':employeeId', $employeeId);
-                    $statement->bindParam(':medId', $medId);
-                    $statement->bindParam(':date', date("Y-m-d H:i:s", strtotime($date)), PDO::PARAM_STR);
-                    $statement->execute();
-                    return $this->db->lastInsertId();
-                }
-                return new ServiceError('An employee with that ID does not exist.');
+        $med = MedService::Instance()->getMed($medId);
+        if ($med !== null) {
+            $employee = EmployeeService::Instance()->getEmployee($employeeId);
+            if ($employee !== null) {
+                $statement = $this->db->prepare('INSERT INTO `Restock_Orders` (Employee_ID, Med_ID, Order_Amount, Date_Ordered) VALUES (:employeeId, :medId, :orderAmount, :date)');
+                $statement->bindParam(':employeeId', $employeeId);
+                $statement->bindParam(':medId', $medId);
+                $statement->bindParam(':orderAmount', $orderAmount);
+                $statement->bindParam(':date', date("Y-m-d H:i:s", strtotime($date)), PDO::PARAM_STR);
+                $statement->execute();
+                return $this->db->lastInsertId();
             }
-            return new ServiceError('A medicine with that ID does not exist.');
+            return new ServiceError('An employee with that ID does not exist.');
         }
-        return new ServiceError('Please enter a valid date.');
+        return new ServiceError('A medicine with that ID does not exist.');
+    }
+
+    function getAllOrders()
+    {
+        $statement = $this->db->prepare('
+          SELECT o.*, e.Name as EmployeeName, m.Name as MedName
+          FROM `Restock_Orders` o
+          inner join `employees` e ON o.Employee_ID = e.Employee_ID
+          inner join `meds` m ON o.Med_ID = m.Med_ID 
+          ');
+        $statement->execute();
+        return $statement->fetchAll();
     }
 
     function getOrder($id)
@@ -54,15 +64,6 @@ final class RestockOrderService
             return $statement->fetch(PDO::FETCH_OBJ);
         }
         return null;
-    }
-
-    function isRealDate($date)
-    {
-        if (false === strtotime($date)) {
-            return false;
-        }
-        list($year, $month, $day) = explode('-', $date);
-        return checkdate($month, $day, $year);
     }
 
     function setDb($db)

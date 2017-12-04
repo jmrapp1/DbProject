@@ -18,7 +18,7 @@ if (isset($_POST['prescriptionId'])) {
         $_SESSION['success'] = true;
     }
 } else {
-    $_SESSION['error'] = 'Please enter the prescription ID.';
+    $_SESSION['error'] = 'Please select the prescription.';
 }
 
 // Redirect where needed
