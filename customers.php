@@ -42,7 +42,7 @@ require_once('services/ServiceError.php');
         <div id="sidebar" class="col-md-2">
             <a href="index.php">Home</a>
             <a href="employees.php">Employees</a>
-            <a href="employee_orders.php">Employee Orders</a>
+            <a href="employee_orders.php">Restock Orders</a>
             <a href="doctors.php">Doctors</a>
             <a href="prescriptions.php">Prescriptions</a>
             <a href="medicines.php">Medicines</a>
