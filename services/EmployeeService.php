@@ -31,6 +31,13 @@ final class EmployeeService
         return $this->db->lastInsertId();
     }
 
+    function getAllEmployees()
+    {
+        $statement = $this->db->prepare('SELECT * FROM `employees`');
+        $statement->execute();
+        return $statement->fetchAll();
+    }
+
     function getEmployee($id)
     {
         $statement = $this->db->prepare('SELECT * FROM `employees` WHERE `Employee_ID` = :id');

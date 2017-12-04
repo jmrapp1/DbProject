@@ -38,10 +38,12 @@ require_once("services/MedService.php");
         <div id="sidebar" class="col-md-2">
             <a href="index.php">Home</a>
             <a href="employees.php">Employees</a>
+            <a href="employee_orders.php">Employee Orders</a>
             <a href="doctors.php">Doctors</a>
             <a href="prescriptions.php">Prescriptions</a>
             <a href="medicines.php">Medicines</a>
             <a href="customers.php">Customers</a>
+            <a href="customer_orders.php">Customer Orders</a>
             <a href="admin.php">Admin</a>
         </div>
         <div id="content" class="col-md-10">

@@ -50,8 +50,8 @@ require_once('services/ServiceError.php');
         </div>
         <div id="content" class="col-md-10">
             <div id="inner-content">
-                <div id="prescriptions">
-                    <h2>Prescriptions</h2>
+                <div id="orders">
+                    <h2>Customer Orders</h2>
                     <hr/>
 
                     <div class="panel panel-default">
@@ -59,23 +59,21 @@ require_once('services/ServiceError.php');
                             <thead>
                             <tr>
                                 <th scope="col">ID</th>
-                                <th scope="col">Medicine</th>
+                                <th scope="col">Prescription</th>
+                                <th scope="col">Employee</th>
+                                <th scope="col">Order Amount</th>
                                 <th scope="col">Date</th>
-                                <th scope="col">Refills Left</th>
-                                <th scope="col">Customer</th>
-                                <th scope="col">Doctor</th>
                             </tr>
                             </thead>
                             <tbody>
                             <?php
-                            foreach (PrescriptionService::Instance()->getAllPrescriptions() as $pres) {
+                            foreach (CustomerOrderService::Instance()->getAllOrders() as $order) {
                                 echo '<tr>';
-                                echo '<td>' . $pres["Prescription_ID"] . '</td>';
-                                echo '<td>' . $pres["MedName"] . '</td>';
-                                echo '<td>' . $pres["Date_Prescribed"] . '</td>';
-                                echo '<td>' . $pres["Refills_Left"] . '</td>';
-                                echo '<td>' . $pres["CustName"] . '</td>';
-                                echo '<td>' . $pres["DocName"] . '</td>';
+                                echo '<td>' . $order["Customer_Order_ID"] . '</td>';
+                                echo '<td>' . $order['MedName'] . ' for ' . $order['CustName'] . ' - ' . $order['Refills_Left'] . ' Refills Left</td>';
+                                echo '<td>' . $order["EmployeeName"] . '</td>';
+                                echo '<td>' . $order["Order_Amount"] . '</td>';
+                                echo '<td>' . $order["Date_Ordered"] . '</td>';
                                 echo '</tr>';
                             }
                             ?>
@@ -84,7 +82,7 @@ require_once('services/ServiceError.php');
                     </div>
                 </div>
                 <div id="new-prescription">
-                    <h2>New Prescription</h2>
+                    <h2>New Order</h2>
                     <hr/>
                     <?php
                     if (isset($_SESSION['error'])) {
@@ -96,43 +94,33 @@ require_once('services/ServiceError.php');
                         $_SESSION['success'] = '';
                     }
                     ?>
-                    <form id="newCustomerForm" method="POST" action="controllers/prescription/CreatePrescription.php">
-                        <input type="hidden" name="redirect" value="../../prescriptions.php"/>
+                    <form method="POST" action="controllers/customerOrder/CreateCustomerOrder.php">
+                        <input type="hidden" name="redirect" value="../../customer_orders.php"/>
                         <div class="input-group col-md-4">
-                            <select class="form-control" name="medId">
-                                <option value="-1">Select Medicine</option>
+                            <select class="form-control" name="employeeId">
+                                <option value="-1">Select Employee To Create Order</option>
                                 <?php
-                                foreach (MedService::Instance()->getAllMeds() as $med) {
-                                    echo "<option value=\"" . $med['Med_ID'] . "\">" . $med['Name'] . "</option>";
+                                foreach (EmployeeService::Instance()->getAllEmployees() as $employee) {
+                                    echo "<option value=\"" . $employee['Employee_ID'] . "\">" . $employee['Name'] . "</option>";
                                 }
                                 ?>
                             </select>
                         </div>
                         <div class="input-group col-md-4">
-                            <select class="form-control" name="doctorId">
-                                <option value="-1">Select Doctor</option>
+                            <select class="form-control" name="prescriptionId">
+                                <option value="-1">Select Prescription</option>
                                 <?php
-                                foreach (DoctorService::Instance()->getAllDoctors() as $doc) {
-                                    echo "<option value=\"" . $doc['Doctor_ID'] . "\">" . $doc['Name'] . "</option>";
+                                foreach (PrescriptionService::Instance()->getAllPrescriptions() as $pres) {
+                                    echo "<option value=\"" . $pres['Prescription_ID'] . "\">" . $pres['MedName'] . " for " . $pres['CustName'] . " - " . $pres['Refills_Left'] . " Refills Left</option>";
                                 }
                                 ?>
                             </select>
                         </div>
                         <div class="input-group col-md-4">
-                            <select class="form-control" name="customerId">
-                                <option value="-1">Select Customer</option>
-                                <?php
-                                foreach (CustomerService::Instance()->getAllCustomers() as $customer) {
-                                    echo "<option value=\"" . $customer['Customer_ID'] . "\">" . $customer['Customer_Name'] . "</option>";
-                                }
-                                ?>
-                            </select>
-                        </div>
-                        <div class="input-group col-md-4">
-                            <input class="form-control" type="number" name="refillsLeft" placeholder="Refills Left">
+                            <input class="form-control" type="number" name="orderAmount" placeholder="Order Amount">
                         </div>
                         <div class="col-md-2">
-                            <button type="submit" class="btn btn-secondary align-items-center">Create Medicine</button>
+                            <button type="submit" class="btn btn-secondary align-items-center">Create Order</button>
                         </div>
                     </form>
                 </div>

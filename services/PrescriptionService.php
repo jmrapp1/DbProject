@@ -74,7 +74,6 @@ final class PrescriptionService
 
     function getAllPrescriptions()
     {
-        // SELECT u.*, s.* FROM users u inner join statuses s on u.status_id = s.id
         $statement = $this->db->prepare('
           SELECT p.*, m.Name as MedName, d.Name as DocName, c.Customer_Name as CustName
           FROM `prescriptions` p 
