@@ -47,7 +47,7 @@ final class CustomerOrderService
     function getAllOrders()
     {
         $statement = $this->db->prepare('
-          SELECT o.*, e.Name as EmployeeName, p.*, m.Name as MedName, c.Customer_Name as CustName
+          SELECT o.*, e.Employee_Name as EmployeeName, p.*, m.Med_Name as MedName, c.Customer_Name as CustName
           FROM `customer_orders` o
           inner join `employees` e ON o.Employee_ID = e.Employee_ID
           inner join `prescriptions` p ON o.Prescription_ID = p.Prescription_ID
@@ -67,15 +67,6 @@ final class CustomerOrderService
             return $statement->fetch(PDO::FETCH_OBJ);
         }
         return null;
-    }
-
-    function isRealDate($date)
-    {
-        if (false === strtotime($date)) {
-            return false;
-        }
-        list($year, $month, $day) = explode('-', $date);
-        return checkdate($month, $day, $year);
     }
 
     function setDb($db)

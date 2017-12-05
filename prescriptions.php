@@ -72,8 +72,8 @@ require_once('services/ServiceError.php');
                                 echo '<tr>';
                                 echo '<td>' . $pres["Prescription_ID"] . '</td>';
                                 echo '<td>' . $pres["MedName"] . '</td>';
-                                echo '<td>' . $pres["Date_Prescribed"] . '</td>';
-                                echo '<td>' . $pres["Refills_Left"] . '</td>';
+                                echo '<td>' . $pres["Date_Writen"] . '</td>';
+                                echo '<td>' . $pres["Refill_Amount"] . '</td>';
                                 echo '<td>' . $pres["CustName"] . '</td>';
                                 echo '<td>' . $pres["DocName"] . '</td>';
                                 echo '</tr>';
@@ -103,7 +103,7 @@ require_once('services/ServiceError.php');
                                 <option value="-1">Select Medicine</option>
                                 <?php
                                 foreach (MedService::Instance()->getAllMeds() as $med) {
-                                    echo "<option value=\"" . $med['Med_ID'] . "\">" . $med['Name'] . "</option>";
+                                    echo "<option value=\"" . $med['Med_ID'] . "\">" . $med['Med_Name'] . "</option>";
                                 }
                                 ?>
                             </select>
@@ -113,7 +113,7 @@ require_once('services/ServiceError.php');
                                 <option value="-1">Select Doctor</option>
                                 <?php
                                 foreach (DoctorService::Instance()->getAllDoctors() as $doc) {
-                                    echo "<option value=\"" . $doc['Doctor_ID'] . "\">" . $doc['Name'] . "</option>";
+                                    echo "<option value=\"" . $doc['Doctor_ID'] . "\">" . $doc['Doctor_Name'] . "</option>";
                                 }
                                 ?>
                             </select>

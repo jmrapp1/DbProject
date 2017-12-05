@@ -71,7 +71,7 @@ require_once('services/ServiceError.php');
                             foreach (CustomerOrderService::Instance()->getAllOrders() as $order) {
                                 echo '<tr>';
                                 echo '<td>' . $order["Customer_Order_ID"] . '</td>';
-                                echo '<td>' . $order['MedName'] . ' for ' . $order['CustName'] . ' - ' . $order['Refills_Left'] . ' Refills Left</td>';
+                                echo '<td>' . $order['MedName'] . ' for ' . $order['CustName'] . ' - ' . $order['Refill_Amount'] . ' Refills Left</td>';
                                 echo '<td>' . $order["EmployeeName"] . '</td>';
                                 echo '<td>' . $order["Order_Amount"] . '</td>';
                                 echo '<td>' . $order["Date_Ordered"] . '</td>';
@@ -102,7 +102,7 @@ require_once('services/ServiceError.php');
                                 <option value="-1">Select Employee To Create Order</option>
                                 <?php
                                 foreach (EmployeeService::Instance()->getAllEmployees() as $employee) {
-                                    echo "<option value=\"" . $employee['Employee_ID'] . "\">" . $employee['Name'] . "</option>";
+                                    echo "<option value=\"" . $employee['Employee_ID'] . "\">" . $employee['Employee_Name'] . "</option>";
                                 }
                                 ?>
                             </select>
@@ -112,7 +112,7 @@ require_once('services/ServiceError.php');
                                 <option value="-1">Select Prescription</option>
                                 <?php
                                 foreach (PrescriptionService::Instance()->getAllPrescriptions() as $pres) {
-                                    echo "<option value=\"" . $pres['Prescription_ID'] . "\">" . $pres['MedName'] . " for " . $pres['CustName'] . " - " . $pres['Refills_Left'] . " Refills Left</option>";
+                                    echo "<option value=\"" . $pres['Prescription_ID'] . "\">" . $pres['MedName'] . " for " . $pres['CustName'] . " - " . $pres['Refill_Amount'] . " Refills Left</option>";
                                 }
                                 ?>
                             </select>

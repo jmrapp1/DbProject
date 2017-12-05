@@ -101,7 +101,7 @@ require_once('services/ServiceError.php');
                                 <option value="-1">Select Employee To Create Order</option>
                                 <?php
                                 foreach (EmployeeService::Instance()->getAllEmployees() as $employee) {
-                                    echo "<option value=\"" . $employee['Employee_ID'] . "\">" . $employee['Name'] . "</option>";
+                                    echo "<option value=\"" . $employee['Employee_ID'] . "\">" . $employee['Employee_Name'] . "</option>";
                                 }
                                 ?>
                             </select>
@@ -111,7 +111,7 @@ require_once('services/ServiceError.php');
                                 <option value="-1">Select Medicine</option>
                                 <?php
                                 foreach (MedService::Instance()->getAllMeds() as $med) {
-                                    echo "<option value=\"" . $med['Med_ID'] . "\">" . $med['Name'] . "</option>";
+                                    echo "<option value=\"" . $med['Med_ID'] . "\">" . $med['Med_Name'] . "</option>";
                                 }
                                 ?>
                             </select>

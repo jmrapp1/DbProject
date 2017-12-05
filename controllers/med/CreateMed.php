@@ -3,7 +3,7 @@
  * User: jonrapp
  * Date: 11/26/17
  */
-require_once("../../DatabaseService.php");
+require_once("../../services/DatabaseService.php");
 require_once('../../services/MedService.php');
 require_once('../../services/ServiceError.php');
 

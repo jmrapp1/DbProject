@@ -34,7 +34,7 @@ final class PrescriptionService
             if ($doctor !== null) {
                 $med = MedService::Instance()->getMed($medId);
                 if ($med !== null) {
-                    $statement = $this->db->prepare('INSERT INTO `prescriptions` (Date_Prescribed, Refills_Left, Customer_ID, Doctor_ID, Med_ID) VALUES (:date, :refills, :customerId, :doctorId, :medId)');
+                    $statement = $this->db->prepare('INSERT INTO `prescriptions` (Date_Writen, Refill_Amount, Customer_ID, Doctor_ID, Med_ID) VALUES (:date, :refills, :customerId, :doctorId, :medId)');
                     $statement->bindParam(':date', date("Y-m-d H:i:s", strtotime($date)), PDO::PARAM_STR);
                     $statement->bindParam(':refills', $refillsLeft);
                     $statement->bindParam(':customerId', $customerId);
@@ -54,10 +54,10 @@ final class PrescriptionService
     {
         $prescription = $this->getPrescription($prescriptionId);
         if ($prescription !== null) {
-            $newRefills = $prescription->Refills_Left - 1;
+            $newRefills = $prescription->Refill_Amount - 1;
             if ($newRefills > 0) {
                 // Remove 1 from the refills and update
-                $statement = $this->db->prepare('UPDATE `prescriptions` SET Refills_Left = :newRefillsLeft WHERE Prescription_ID = :prescriptionId');
+                $statement = $this->db->prepare('UPDATE `prescriptions` SET Refill_Amount = :newRefillsLeft WHERE Prescription_ID = :prescriptionId');
                 $statement->bindParam(':newRefillsLeft', $newRefills);
                 $statement->bindParam(':prescriptionId', $prescriptionId);
                 $statement->execute();
@@ -75,7 +75,7 @@ final class PrescriptionService
     function getAllPrescriptions()
     {
         $statement = $this->db->prepare('
-          SELECT p.*, m.Name as MedName, d.Name as DocName, c.Customer_Name as CustName
+          SELECT p.*, m.Med_Name as MedName, d.Doctor_Name as DocName, c.Customer_Name as CustName
           FROM `prescriptions` p 
           inner join `meds` m ON p.Med_ID = m.Med_ID 
           inner join `doctors` d ON p.Doctor_ID = d.Doctor_ID

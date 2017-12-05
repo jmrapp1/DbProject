@@ -24,7 +24,7 @@ final class EmployeeService
 
     function createEmployee($name, $title)
     {
-        $statement = $this->db->prepare('INSERT INTO `employees` (Name, Title) VALUES (:name, :title)');
+        $statement = $this->db->prepare('INSERT INTO `employees` (Employee_Name, Employee_Title) VALUES (:name, :title)');
         $statement->bindParam(':name', $name);
         $statement->bindParam(':title', $title);
         $statement->execute();

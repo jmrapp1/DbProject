@@ -58,7 +58,7 @@ require_once("services/MedService.php");
                             <tr>
                                 <th scope="col">ID</th>
                                 <th scope="col">Name</th>
-                                <th scope="col">Stock</th>
+                                <th scope="col">Inventory</th>
                                 <th scope="col"></th>
                             </tr>
                             </thead>
@@ -67,8 +67,8 @@ require_once("services/MedService.php");
                             foreach (MedService::Instance()->getAllMeds() as $med) {
                                 echo '<tr>';
                                 echo '<td>' . $med["Med_ID"] . '</td>';
-                                echo '<td>' . $med["Name"] . '</td>';
-                                echo '<td>' . $med["Stock_Amount"] . '</td>';
+                                echo '<td>' . $med["Med_Name"] . '</td>';
+                                echo '<td>' . $med["Inventory"] . '</td>';
                                 echo '<td>
                                         <form id="newCustomerForm" method="POST" action="controllers/med/DeleteMed.php">
                                         <input type="hidden" name="redirect" value="../../medicines.php"/>

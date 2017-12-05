@@ -25,7 +25,7 @@ final class MedService
     function createMed($name, $stock)
     {
         if (!$this->doesMedExist($name)) {
-            $statement = $this->db->prepare('INSERT INTO `meds` (Name, Stock_Amount) VALUES (:name, :stock)');
+            $statement = $this->db->prepare('INSERT INTO `meds` (Med_Name, Inventory) VALUES (:name, :stock)');
             $statement->bindParam(':name', $name);
             $statement->bindParam(':stock', $stock);
             $statement->execute();
@@ -38,10 +38,10 @@ final class MedService
     {
         $med = $this->getMed($medId);
         if ($med !== null) {
-            $newStockLeft = $med->Stock_Amount - 1;
+            $newStockLeft = $med->Inventory - 1;
             if ($newStockLeft > 0) {
                 // Remove 1 from the stock and update
-                $statement = $this->db->prepare('UPDATE `meds` SET Stock_Amount = :newStockLeft WHERE Med_ID = :medId');
+                $statement = $this->db->prepare('UPDATE `meds` SET Inventory = :newStockLeft WHERE Med_ID = :medId');
                 $statement->bindParam(':newStockLeft', $newStockLeft);
                 $statement->bindParam(':medId', $med);
                 $statement->execute();
@@ -82,7 +82,7 @@ final class MedService
 
     function doesMedExist($name)
     {
-        $statement = $this->db->prepare('SELECT COUNT(*) FROM `meds` WHERE `Name` = :name');
+        $statement = $this->db->prepare('SELECT COUNT(*) FROM `meds` WHERE `Med_Name` = :name');
         $statement->bindParam(':name', $name);
         $statement->execute();
         return $statement->fetchColumn() > 0;

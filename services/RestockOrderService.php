@@ -46,7 +46,7 @@ final class RestockOrderService
     function getAllOrders()
     {
         $statement = $this->db->prepare('
-          SELECT o.*, e.Name as EmployeeName, m.Name as MedName
+          SELECT o.*, e.Employee_Name as EmployeeName, m.Med_Name as MedName
           FROM `Restock_Orders` o
           inner join `employees` e ON o.Employee_ID = e.Employee_ID
           inner join `meds` m ON o.Med_ID = m.Med_ID 
