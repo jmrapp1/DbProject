@@ -50,24 +50,19 @@ final class PrescriptionService
         return new ServiceError('A customer with that ID does not exist.');
     }
 
-    function fulfillPrescription($prescriptionId)
+    function fulfillPrescription($prescriptionId, $orderAmount)
     {
         $prescription = $this->getPrescription($prescriptionId);
         if ($prescription !== null) {
-            $newRefills = $prescription->Refill_Amount - 1;
-            if ($newRefills > 0) {
-                // Remove 1 from the refills and update
+            $newRefills = $prescription->Refill_Amount - $orderAmount;
+            if ($newRefills >= 0) {
                 $statement = $this->db->prepare('UPDATE `prescriptions` SET Refill_Amount = :newRefillsLeft WHERE Prescription_ID = :prescriptionId');
                 $statement->bindParam(':newRefillsLeft', $newRefills);
                 $statement->bindParam(':prescriptionId', $prescriptionId);
                 $statement->execute();
                 return true;
             }
-            // Delete the prescription because there's no refills left
-            $statement = $this->db->prepare('DELETE FROM `prescriptions` WHERE Prescription_ID = :prescriptionId');
-            $statement->bindParam(':prescriptionId', $prescriptionId);
-            $statement->execute();
-            return true;
+            return new ServiceError('There is not enough refills left for that order amount.');
         }
         return new ServiceError('A prescription with that ID does not exist.');
     }
@@ -83,6 +78,14 @@ final class PrescriptionService
           ');
         $statement->execute();
         return $statement->fetchAll();
+    }
+
+    function deletePrescriptionsForCustomer($customerId)
+    {
+        $statement = $this->db->prepare('DELETE FROM `prescriptions` WHERE Customer_ID = :customerId');
+        $statement->bindParam(':customerId', $customerId);
+        $statement->execute();
+
     }
 
     function getPrescription($id)

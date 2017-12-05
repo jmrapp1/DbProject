@@ -4,6 +4,7 @@
  * Date: 12/3/17
  */
 require_once("DatabaseService.php");
+require_once("PrescriptionService.php");
 
 final class CustomerService
 {
@@ -43,6 +44,13 @@ final class CustomerService
             return $statement->fetch(PDO::FETCH_OBJ);
         }
         return null;
+    }
+
+    function deleteCustomer($customerId) {
+        $statement = $this->db->prepare('DELETE FROM `Customer` WHERE Customer_ID = :customerId');
+        $statement->bindParam(':customerId', $customerId);
+        $statement->execute();
+        PrescriptionService::Instance()->deletePrescriptionsForCustomer($customerId);
     }
 
     function setDb($db)

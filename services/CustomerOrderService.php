@@ -25,19 +25,24 @@ final class CustomerOrderService
     {
     }
 
-    function createOrder($employeeId, $prescriptionId, $date, $orderAmount)
+    function createOrder($employeeId, $prescriptionId, $date, $orderAmount, $orderType)
     {
         $prescription = PrescriptionService::Instance()->getPrescription($prescriptionId);
         if ($prescription !== null) {
             $employee = EmployeeService::Instance()->getEmployee($employeeId);
             if ($employee !== null) {
-                $statement = $this->db->prepare('INSERT INTO `customer_orders` (Employee_ID, Prescription_ID, Date_Ordered, Order_Amount) VALUES (:employeeId, :prescriptionId, :date, :orderAmount)');
-                $statement->bindParam(':employeeId', $employeeId);
-                $statement->bindParam(':prescriptionId', $prescriptionId);
-                $statement->bindParam(':date', date("Y-m-d H:i:s", strtotime($date)), PDO::PARAM_STR);
-                $statement->bindParam(':orderAmount', $orderAmount);
-                $statement->execute();
-                return $this->db->lastInsertId();
+                $fulfillRes = PrescriptionService::Instance()->fulfillPrescription($prescriptionId, $orderAmount);
+                if (!($fulfillRes instanceof ServiceError)) {
+                    $statement = $this->db->prepare('INSERT INTO `customer_orders` (Employee_ID, Prescription_ID, Date_Ordered, Order_Amount, Order_Type) VALUES (:employeeId, :prescriptionId, :date, :orderAmount, :orderType)');
+                    $statement->bindParam(':employeeId', $employeeId);
+                    $statement->bindParam(':prescriptionId', $prescriptionId);
+                    $statement->bindParam(':date', date("Y-m-d H:i:s", strtotime($date)), PDO::PARAM_STR);
+                    $statement->bindParam(':orderAmount', $orderAmount);
+                    $statement->bindParam(':orderType', $orderType);
+                    $statement->execute();
+                    return $this->db->lastInsertId();
+                }
+                return $fulfillRes;
             }
             return new ServiceError('An employee with that ID does not exist.');
         }

@@ -11,8 +11,9 @@ if (isset($_POST['orderAmount']) && isset($_POST['employeeId']) && isset($_POST[
     $date = date('Y-m-d H:i:s');
     $employeeId = $_POST['employeeId'];
     $prescriptionId = $_POST['prescriptionId'];
+    $orderType = $_POST['orderType'];
 
-    $res = CustomerOrderService::Instance()->createOrder($employeeId, $prescriptionId, $date, $orderAmount);
+    $res = CustomerOrderService::Instance()->createOrder($employeeId, $prescriptionId, $date, $orderAmount, $orderType);
 
     if ($res instanceof ServiceError) {
         $_SESSION['error'] = $res->getError();

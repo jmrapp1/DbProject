@@ -116,6 +116,12 @@ require_once('services/ServiceError.php');
                                 }
                                 ?>
                             </select>
+                        </div><div class="input-group col-md-4">
+                            <select class="form-control" name="orderType">
+                                <option value="Store Pickup">Store Pickup</option>
+                                <option value="Ship Home">Ship Home</option>
+                                ?>
+                            </select>
                         </div>
                         <div class="input-group col-md-4">
                             <input class="form-control" type="number" name="orderAmount" placeholder="Order Amount">
