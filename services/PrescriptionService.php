@@ -26,11 +26,11 @@ final class PrescriptionService
     }
 
     // TODO: Validate customer and doctors exist (need to wait for Nick's code)
-    function createPrescription($date, $refillsLeft, $customerId, $doctorId, $medId)
+    function createPrescription($date, $refillsLeft, $customerId, $medId)
     {
         $customer = CustomerService::Instance()->getCustomer($customerId);
         if ($customer !== null) {
-            $doctor = DoctorService::Instance()->getDoctor($doctorId);
+            $doctor = DoctorService::Instance()->getDoctor($customer->Doctor_ID);
             if ($doctor !== null) {
                 $med = MedService::Instance()->getMed($medId);
                 if ($med !== null) {
@@ -38,7 +38,7 @@ final class PrescriptionService
                     $statement->bindParam(':date', date("Y-m-d H:i:s", strtotime($date)), PDO::PARAM_STR);
                     $statement->bindParam(':refills', $refillsLeft);
                     $statement->bindParam(':customerId', $customerId);
-                    $statement->bindParam(':doctorId', $doctorId);
+                    $statement->bindParam(':doctorId', $customer->Doctor_ID);
                     $statement->bindParam(':medId', $medId);
                     $statement->execute();
                     return $this->db->lastInsertId();
@@ -56,25 +56,50 @@ final class PrescriptionService
         if ($prescription !== null) {
             $newRefills = $prescription->Refill_Amount - $orderAmount;
             if ($newRefills >= 0) {
-                $statement = $this->db->prepare('UPDATE `prescriptions` SET Refill_Amount = :newRefillsLeft WHERE Prescription_ID = :prescriptionId');
-                $statement->bindParam(':newRefillsLeft', $newRefills);
-                $statement->bindParam(':prescriptionId', $prescriptionId);
-                $statement->execute();
-                return true;
+                $med = MedService::Instance()->getMed($prescription->Med_ID);
+                if ($med != null) {
+                    $medFulfill = MedService::Instance()->removeMedStock($prescription->Med_ID, $orderAmount);
+                    if (!($medFulfill instanceof ServiceError)) {
+                        $statement = $this->db->prepare('UPDATE `prescriptions` SET Refill_Amount = :newRefillsLeft WHERE Prescription_ID = :prescriptionId');
+                        $statement->bindParam(':newRefillsLeft', $newRefills);
+                        $statement->bindParam(':prescriptionId', $prescriptionId);
+                        $statement->execute();
+                        return true;
+                    }
+                    return $medFulfill;
+                }
+                return new ServiceError('There is no medication with that ID.');
             }
             return new ServiceError('There is not enough refills left for that order amount.');
         }
         return new ServiceError('A prescription with that ID does not exist.');
     }
 
-    function getAllPrescriptions()
+    function deletePrescription($prescriptionId) {
+        $statement = $this->db->prepare('DELETE FROM `prescriptions` WHERE Prescription_ID = :prescriptionId');
+        $statement->bindParam(':prescriptionId', $prescriptionId);
+        $statement->execute();
+        CustomerOrderService::Instance()->deleteOrdersForPrescriptions($prescriptionId);
+    }
+
+    function getAllPrescriptions($sort)
     {
+        if ($sort == "sortDate") {
+            $sort = "Date_Writen";
+        } else if ($sort == "sortAmount") {
+            $sort = "Refill_Amount";
+        } else {
+            $sort = "Prescription_ID";
+        }
+        $sort = 'p.' . $sort;
+
         $statement = $this->db->prepare('
           SELECT p.*, m.Med_Name as MedName, d.Doctor_Name as DocName, c.Customer_Name as CustName
           FROM `prescriptions` p 
           inner join `meds` m ON p.Med_ID = m.Med_ID 
           inner join `doctors` d ON p.Doctor_ID = d.Doctor_ID
           inner join `Customer` c on p.Customer_ID = c.Customer_ID
+          ORDER BY ' . $sort . ' DESC
           ');
         $statement->execute();
         return $statement->fetchAll();
@@ -85,7 +110,6 @@ final class PrescriptionService
         $statement = $this->db->prepare('DELETE FROM `prescriptions` WHERE Customer_ID = :customerId');
         $statement->bindParam(':customerId', $customerId);
         $statement->execute();
-
     }
 
     function getPrescription($id)

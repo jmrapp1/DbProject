@@ -34,32 +34,22 @@ final class MedService
         return false;
     }
 
-    function removeMedStock($medId)
+    function removeMedStock($medId, $stock)
     {
         $med = $this->getMed($medId);
         if ($med !== null) {
-            $newStockLeft = $med->Inventory - 1;
-            if ($newStockLeft > 0) {
+            $newStockLeft = $med->Inventory - $stock;
+            if ($newStockLeft >= 0) {
                 // Remove 1 from the stock and update
                 $statement = $this->db->prepare('UPDATE `meds` SET Inventory = :newStockLeft WHERE Med_ID = :medId');
                 $statement->bindParam(':newStockLeft', $newStockLeft);
-                $statement->bindParam(':medId', $med);
+                $statement->bindParam(':medId', $medId);
                 $statement->execute();
                 return true;
             }
-            // Delete the med because there's no stock left
-            $statement = $this->db->prepare('DELETE FROM `meds` WHERE Med_ID = :medId');
-            $statement->bindParam(':medId', $medId);
-            $statement->execute();
-            return true;
+            return new ServiceError("There is not enough of that medicine to fulfill your request.");
         }
         return new ServiceError('A medicine with that ID does not exist.');
-    }
-
-    function deleteMed($medId) {
-        $statement = $this->db->prepare('DELETE FROM `meds` WHERE Med_ID = :medId');
-        $statement->bindParam(':medId', $medId);
-        $statement->execute();
     }
 
     function getAllMeds()

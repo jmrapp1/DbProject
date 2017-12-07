@@ -10,6 +10,8 @@ require_once('PrescriptionService.php');
 require_once('CustomerOrderService.php');
 require_once('CustomerService.php');
 require_once('DoctorService.php');
+require_once('UserService.php');
+require_once('SessionService.php');
 
 final class DatabaseService
 {
@@ -37,6 +39,8 @@ final class DatabaseService
             CustomerOrderService::Instance()->setDb($this->db);
             CustomerService::Instance()->setDb($this->db);
             DoctorService::Instance()->setDb($this->db);
+            UserService::Instance()->setDb($this->db);
+            SessionService::Instance()->setDb($this->db);
         } catch (PDOException $e) {
             print 'Error!: ' . $e->getMessage() . '<br/>';
             die();

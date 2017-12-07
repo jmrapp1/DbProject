@@ -9,6 +9,23 @@ require_once('services/CustomerOrderService.php');
 require_once('services/EmployeeService.php');
 require_once('services/ServiceError.php');
 
+$userType = "";
+if (SessionService::Instance()->isSessionSet()) {
+    $userType = UserService::Instance()->getUserType(SessionService::Instance()->getLoginId());
+    if ($userType != "Employee" && $userType != "Doctor") {
+        header("Location: index.php");
+    }
+} else {
+    header("Location: index.php");
+}
+
+$sort = "";
+if (isset($_POST['sortDate'])) {
+    $sort = 'sortDate';
+} else if (isset($_POST['sortAmount'])) {
+    $sort = 'sortAmount';
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -40,14 +57,28 @@ require_once('services/ServiceError.php');
     <div id="main" class="flex-row">
         <div id="sidebar" class="col-md-2">
             <a href="index.php">Home</a>
-            <a href="employees.php">Employees</a>
-            <a href="employee_orders.php">Restock Orders</a>
-            <a href="doctors.php">Doctors</a>
-            <a href="prescriptions.php">Prescriptions</a>
-            <a href="medicines.php">Medicines</a>
-            <a href="customers.php">Customers</a>
-            <a href="customer_orders.php">Customer Orders</a>
-            <a href="admin.php">Admin</a>
+            <?php
+            if (SessionService::Instance()->isSessionSet()) {
+                echo '<a href="controllers/login/Logout.php">Logout</a>';
+
+                if ($userType == "Employee") {
+                    echo '<a href="employee_orders.php">Restock Orders</a>';
+                    echo '<a href="customers.php">Customers</a>';
+                    echo '<a href="customer_orders.php">Customer Orders</a>';
+                } else if ($userType == "Doctor") {
+                    echo '<a href="medicines.php">Medicines</a>';
+                }
+
+                if ($userType != "Customer") { // either customer or doctor
+                    echo '<a href="employees.php">Employees</a>';
+                    echo '<a href="doctors.php">Doctors</a>';
+                    echo '<a href="prescriptions.php">Prescriptions</a>';
+                }
+            } else {
+                echo '<a href="login.php">Login</a>';
+                echo '<a href="register.php">Register</a>';
+            }
+            ?>
         </div>
         <div id="content" class="col-md-10">
             <div id="inner-content">
@@ -64,23 +95,43 @@ require_once('services/ServiceError.php');
                                 <th scope="col">Employee</th>
                                 <th scope="col">Order Amount</th>
                                 <th scope="col">Date</th>
+                                <th scope="col">Order Type</th>
                             </tr>
                             </thead>
                             <tbody>
                             <?php
-                            foreach (CustomerOrderService::Instance()->getAllOrders() as $order) {
+                            foreach (CustomerOrderService::Instance()->getAllOrders($sort) as $order) {
                                 echo '<tr>';
                                 echo '<td>' . $order["Customer_Order_ID"] . '</td>';
                                 echo '<td>' . $order['MedName'] . ' for ' . $order['CustName'] . ' - ' . $order['Refill_Amount'] . ' Refills Left</td>';
                                 echo '<td>' . $order["EmployeeName"] . '</td>';
                                 echo '<td>' . $order["Order_Amount"] . '</td>';
                                 echo '<td>' . $order["Date_Ordered"] . '</td>';
+                                echo '<td>' . $order["Order_Type"] . '</td>';
                                 echo '</tr>';
                             }
                             ?>
                             </tbody>
                         </table>
                     </div>
+                    <div class="row">
+                        <div class="col-md-2">
+                            <form method="POST" action="">
+                                <button type="submit" name="sort" class="btn btn-secondary align-items-center">Sort By ID</button>
+                            </form>
+                        </div>
+                        <div class="col-md-2">
+                            <form method="POST" action="">
+                                <button type="submit" name="sortDate" class="btn btn-secondary align-items-center">Sort By Date</button>
+                            </form>
+                        </div>
+                        <div class="col-md-2">
+                            <form method="POST" action="">
+                                <button type="submit" name="sortAmount" class="btn btn-secondary align-items-center">Sort By Order Amount</button>
+                            </form>
+                        </div>
+                    </div>
+                    <br />
                 </div>
                 <div id="new-prescription">
                     <h2>New Order</h2>
@@ -116,7 +167,8 @@ require_once('services/ServiceError.php');
                                 }
                                 ?>
                             </select>
-                        </div><div class="input-group col-md-4">
+                        </div>
+                        <div class="input-group col-md-4">
                             <select class="form-control" name="orderType">
                                 <option value="Store Pickup">Store Pickup</option>
                                 <option value="Ship Home">Ship Home</option>

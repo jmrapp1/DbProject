@@ -10,6 +10,15 @@ require_once('services/EmployeeService.php');
 require_once('services/PrescriptionService.php');
 require_once('services/ServiceError.php');
 
+$userType = "";
+if (SessionService::Instance()->isSessionSet()) {
+    $userType = UserService::Instance()->getUserType(SessionService::Instance()->getLoginId());
+    if ($userType != "Employee" && $userType != "Doctor") {
+        header("Location: index.php");
+    }
+} else {
+    header("Location: index.php");
+}
 ?>
 
 <!DOCTYPE html>
@@ -41,18 +50,58 @@ require_once('services/ServiceError.php');
     <div id="main" class="flex-row">
         <div id="sidebar" class="col-md-2">
             <a href="index.php">Home</a>
-            <a href="employees.php">Employees</a>
-            <a href="employee_orders.php">Restock Orders</a>
-            <a href="doctors.php">Doctors</a>
-            <a href="prescriptions.php">Prescriptions</a>
-            <a href="medicines.php">Medicines</a>
-            <a href="customers.php">Customers</a>
-            <a href="customer_orders.php">Customer Orders</a>
-            <a href="admin.php">Admin</a>
+            <?php
+            if (SessionService::Instance()->isSessionSet()) {
+                echo '<a href="controllers/login/Logout.php">Logout</a>';
+
+                if ($userType == "Employee") {
+                    echo '<a href="employee_orders.php">Restock Orders</a>';
+                    echo '<a href="customers.php">Customers</a>';
+                    echo '<a href="customer_orders.php">Customer Orders</a>';
+                } else if ($userType == "Doctor") {
+                    echo '<a href="medicines.php">Medicines</a>';
+                }
+
+                if ($userType != "Customer") { // either customer or doctor
+                    echo '<a href="employees.php">Employees</a>';
+                    echo '<a href="doctors.php">Doctors</a>';
+                    echo '<a href="prescriptions.php">Prescriptions</a>';
+                }
+            } else {
+                echo '<a href="login.php">Login</a>';
+                echo '<a href="register.php">Register</a>';
+            }
+            ?>
         </div>
         <div id="content" class="col-md-10">
             <div id="inner-content">
-                <h2>Employees</h2>
+                <div id="employees">
+                    <h2>Employees</h2>
+                    <hr/>
+
+                    <div class="panel panel-default">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th scope="col">ID</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Title</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <?php
+                            foreach (EmployeeService::Instance()->getAllEmployees() as $employee) {
+                                echo '<tr>';
+                                echo '<td>' . $employee["Employee_ID"] . '</td>';
+                                echo '<td>' . $employee["Employee_Name"] . '</td>';
+                                echo '<td>' . $employee["Employee_Title"] . '</td>';
+                                echo '</tr>';
+                            }
+                            ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

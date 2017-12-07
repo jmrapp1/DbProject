@@ -49,18 +49,35 @@ final class CustomerOrderService
         return new ServiceError('A prescription with that ID does not exist.');
     }
 
-    function getAllOrders()
+    function getAllOrders($sort)
     {
+        if ($sort == "sortDate") {
+            $sort = "Date_Ordered";
+        } else if ($sort == "sortAmount") {
+            $sort = "Order_Amount";
+        } else {
+            $sort = "Customer_Order_ID";
+        }
+        $sort = 'o.' . $sort;
+
         $statement = $this->db->prepare('
-          SELECT o.*, e.Employee_Name as EmployeeName, p.*, m.Med_Name as MedName, c.Customer_Name as CustName
-          FROM `customer_orders` o
-          inner join `employees` e ON o.Employee_ID = e.Employee_ID
-          inner join `prescriptions` p ON o.Prescription_ID = p.Prescription_ID
-          inner join `meds` m ON p.Med_ID = m.Med_ID 
-          inner join `Customer` c on p.Customer_ID = c.Customer_ID
-          ');
+              SELECT o.*, e.Employee_Name as EmployeeName, p.*, m.Med_Name as MedName, c.Customer_Name as CustName
+              FROM `customer_orders` o
+              inner join `employees` e ON o.Employee_ID = e.Employee_ID
+              inner join `prescriptions` p ON o.Prescription_ID = p.Prescription_ID
+              inner join `meds` m ON p.Med_ID = m.Med_ID 
+              inner join `Customer` c on p.Customer_ID = c.Customer_ID
+              ORDER BY ' . $sort . ' DESC
+             ');
         $statement->execute();
         return $statement->fetchAll();
+    }
+
+    function deleteOrdersForPrescriptions($presId)
+    {
+        $statement = $this->db->prepare('DELETE FROM `customer_orders` WHERE Prescription_ID = :presId');
+        $statement->bindParam(':presId', $presId);
+        $statement->execute();
     }
 
     function getOrder($id)

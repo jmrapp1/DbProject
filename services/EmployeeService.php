@@ -22,11 +22,12 @@ final class EmployeeService
     {
     }
 
-    function createEmployee($name, $title)
+    function createEmployee($name, $title, $loginId)
     {
-        $statement = $this->db->prepare('INSERT INTO `employees` (Employee_Name, Employee_Title) VALUES (:name, :title)');
+        $statement = $this->db->prepare('INSERT INTO `employees` (Employee_Name, Employee_Title, Login_ID) VALUES (:name, :title, :loginId)');
         $statement->bindParam(':name', $name);
         $statement->bindParam(':title', $title);
+        $statement->bindParam(':loginId', $loginId);
         $statement->execute();
         return $this->db->lastInsertId();
     }
@@ -41,6 +42,17 @@ final class EmployeeService
     function getEmployee($id)
     {
         $statement = $this->db->prepare('SELECT * FROM `employees` WHERE `Employee_ID` = :id');
+        $statement->bindParam(':id', $id);
+        $statement->execute();
+        if ($statement->rowCount() > 0) {
+            return $statement->fetch(PDO::FETCH_OBJ);
+        }
+        return null;
+    }
+
+    function getEmployeeByLoginId($id)
+    {
+        $statement = $this->db->prepare('SELECT * FROM `employees` WHERE `Login_ID` = :id');
         $statement->bindParam(':id', $id);
         $statement->execute();
         if ($statement->rowCount() > 0) {

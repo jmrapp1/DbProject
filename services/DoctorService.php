@@ -45,6 +45,17 @@ final class DoctorService
         return null;
     }
 
+    function getDoctorByLoginId($id)
+    {
+        $statement = $this->db->prepare('SELECT * FROM `doctors` WHERE `Login_ID` = :id');
+        $statement->bindParam(':id', $id);
+        $statement->execute();
+        if ($statement->rowCount() > 0) {
+            return $statement->fetch(PDO::FETCH_OBJ);
+        }
+        return null;
+    }
+
     function setDb($db)
     {
         $this->db = $db;

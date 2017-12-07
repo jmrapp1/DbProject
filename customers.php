@@ -10,6 +10,11 @@ require_once('services/EmployeeService.php');
 require_once('services/PrescriptionService.php');
 require_once('services/ServiceError.php');
 
+$userType = "";
+if (SessionService::Instance()->isSessionSet()) {
+    $userType = UserService::Instance()->getUserType(SessionService::Instance()->getLoginId());
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -41,14 +46,28 @@ require_once('services/ServiceError.php');
     <div id="main" class="flex-row">
         <div id="sidebar" class="col-md-2">
             <a href="index.php">Home</a>
-            <a href="employees.php">Employees</a>
-            <a href="employee_orders.php">Restock Orders</a>
-            <a href="doctors.php">Doctors</a>
-            <a href="prescriptions.php">Prescriptions</a>
-            <a href="medicines.php">Medicines</a>
-            <a href="customers.php">Customers</a>
-            <a href="customer_orders.php">Customer Orders</a>
-            <a href="admin.php">Admin</a>
+            <?php
+            if (SessionService::Instance()->isSessionSet()) {
+                echo '<a href="controllers/login/Logout.php">Logout</a>';
+
+                if ($userType == "Employee") {
+                    echo '<a href="employee_orders.php">Restock Orders</a>';
+                    echo '<a href="customers.php">Customers</a>';
+                    echo '<a href="customer_orders.php">Customer Orders</a>';
+                } else if ($userType == "Doctor") {
+                    echo '<a href="medicines.php">Medicines</a>';
+                }
+
+                if ($userType != "Customer") { // either customer or doctor
+                    echo '<a href="employees.php">Employees</a>';
+                    echo '<a href="doctors.php">Doctors</a>';
+                    echo '<a href="prescriptions.php">Prescriptions</a>';
+                }
+            } else {
+                echo '<a href="login.php">Login</a>';
+                echo '<a href="register.php">Register</a>';
+            }
+            ?>
         </div>
         <div id="content" class="col-md-10">
             <div id="inner-content">
@@ -67,12 +86,12 @@ require_once('services/ServiceError.php');
                             </tr>
                             </thead>
                             <tbody>
-                            <tr>
+                            <!--<tr>
                                 <td>Bob Joe</td>
                                 <td>123 Main Street</td>
                                 <td>12</td>
                                 <td></td>
-                            </tr>
+                            </tr>-->
                             </tbody>
                         </table>
                     </div>
@@ -80,7 +99,7 @@ require_once('services/ServiceError.php');
                 <div id="new-customer">
                     <h2>New Customer</h2>
                     <hr/>
-                    <form id="newCustomerForm">
+                    <form id="newCustomerForm" method="POST" action="">
                         <div class="input-group col-md-4">
                             <input class="form-control" type="text" name="name" placeholder="Name" autofocus>
                         </div>

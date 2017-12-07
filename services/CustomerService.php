@@ -46,6 +46,17 @@ final class CustomerService
         return null;
     }
 
+    function getCustomerByLoginId($id)
+    {
+        $statement = $this->db->prepare('SELECT * FROM `Customer` WHERE `Login_ID` = :id');
+        $statement->bindParam(':id', $id);
+        $statement->execute();
+        if ($statement->rowCount() > 0) {
+            return $statement->fetch(PDO::FETCH_OBJ);
+        }
+        return null;
+    }
+
     function deleteCustomer($customerId) {
         $statement = $this->db->prepare('DELETE FROM `Customer` WHERE Customer_ID = :customerId');
         $statement->bindParam(':customerId', $customerId);

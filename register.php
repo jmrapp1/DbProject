@@ -6,10 +6,10 @@
 require_once("services/DatabaseService.php");
 require_once("services/MedService.php");
 
-$userType = "";
 if (SessionService::Instance()->isSessionSet()) {
-    $userType = UserService::Instance()->getUserType(SessionService::Instance()->getLoginId());
+    header("Location: index.php");
 }
+$userType = "";
 ?>
 
 <!DOCTYPE html>
@@ -68,42 +68,7 @@ if (SessionService::Instance()->isSessionSet()) {
         <div id="content" class="col-md-10">
             <div id="inner-content">
                 <div id="medicines">
-                    <h2>Medicines</h2>
-                    <hr/>
-
-                    <div class="panel panel-default">
-                        <table class="table table-striped">
-                            <thead>
-                            <tr>
-                                <th scope="col">ID</th>
-                                <th scope="col">Name</th>
-                                <th scope="col">Inventory</th>
-                                <!--<th scope="col"></th>-->
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <?php
-                            foreach (MedService::Instance()->getAllMeds() as $med) {
-                                echo '<tr>';
-                                echo '<td>' . $med["Med_ID"] . '</td>';
-                                echo '<td>' . $med["Med_Name"] . '</td>';
-                                echo '<td>' . $med["Inventory"] . '</td>';
-                                /*echo '<td>
-                                        <form id="newCustomerForm" method="POST" action="controllers/med/DeletePrescription.php">
-                                        <input type="hidden" name="redirect" value="../../medicines.php"/>
-                                        <input type="hidden" name="med-id" value="' . $med["Med_ID"] . '" />
-                                        <button class="btn btn-md btn-danger"><i class="fa fa-trash"></i></button>
-                                        </form>
-                                     </td>';*/
-                                echo '</tr>';
-                            }
-                            ?>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <div id="new-medicine">
-                    <h2>New Medicine</h2>
+                    <h2>Register</h2>
                     <hr/>
                     <?php
                     if (isset($_SESSION['error'])) {
@@ -115,16 +80,32 @@ if (SessionService::Instance()->isSessionSet()) {
                         $_SESSION['success'] = '';
                     }
                     ?>
-                    <form id="newCustomerForm" method="POST" action="controllers/med/CreateMed.php">
-                        <input type="hidden" name="redirect" value="../../medicines.php"/>
+                    <form id="newCustomerForm" method="POST" action="controllers/login/RegisterLogin.php">
+                        <input type="hidden" name="redirect" value="../../register.php"/>
                         <div class="input-group col-md-4">
-                            <input class="form-control" type="text" name="name" placeholder="Name" autofocus>
+                            <input class="form-control" type="text" name="username" placeholder="Username" autofocus>
                         </div>
                         <div class="input-group col-md-4">
-                            <input class="form-control" type="number" name="stock" placeholder="Stock">
+                            <input class="form-control" type="password" name="password" placeholder="Password">
+                        </div>
+                        <div class="input-group col-md-4">
+                            <select class="form-control" name="type">
+                                <option value="Employee">Employee</option>
+                                <option value="Doctor">Doctor</option>
+                                <option value="Customer">Customer</option>
+                            </select>
+                        </div>
+                        <h2>Employee</h2>
+                        <hr/>
+                        <div class="input-group col-md-4">
+                            <input class="form-control" type="text" name="employeeName" placeholder="Full Name"
+                                   autofocus>
+                        </div>
+                        <div class="input-group col-md-4">
+                            <input class="form-control" type="text" name="employeeTitle" placeholder="Title" autofocus>
                         </div>
                         <div class="col-md-2">
-                            <button type="submit" class="btn btn-secondary align-items-center">Create Medicine</button>
+                            <button type="submit" class="btn btn-secondary align-items-center">Register</button>
                         </div>
                     </form>
                 </div>

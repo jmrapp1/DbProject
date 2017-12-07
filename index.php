@@ -10,6 +10,10 @@ require_once('services/EmployeeService.php');
 require_once('services/PrescriptionService.php');
 require_once('services/ServiceError.php');
 
+$userType = "";
+if (SessionService::Instance()->isSessionSet()) {
+    $userType = UserService::Instance()->getUserType(SessionService::Instance()->getLoginId());
+}
 ?>
 
 <!DOCTYPE html>
@@ -41,22 +45,44 @@ require_once('services/ServiceError.php');
     <div id="main" class="flex-row">
         <div id="sidebar" class="col-md-2">
             <a href="index.php">Home</a>
-            <a href="employees.php">Employees</a>
-            <a href="employee_orders.php">Restock Orders</a>
-            <a href="doctors.php">Doctors</a>
-            <a href="prescriptions.php">Prescriptions</a>
-            <a href="medicines.php">Medicines</a>
-            <a href="customers.php">Customers</a>
-            <a href="customer_orders.php">Customer Orders</a>
-            <a href="admin.php">Admin</a>
+            <?php
+            if (SessionService::Instance()->isSessionSet()) {
+                echo '<a href="controllers/login/Logout.php">Logout</a>';
+
+                if ($userType == "Employee") {
+                    echo '<a href="employee_orders.php">Restock Orders</a>';
+                    echo '<a href="customers.php">Customers</a>';
+                    echo '<a href="customer_orders.php">Customer Orders</a>';
+                } else if ($userType == "Doctor") {
+                    echo '<a href="medicines.php">Medicines</a>';
+                }
+
+                if ($userType != "Customer") { // either customer or doctor
+                    echo '<a href="employees.php">Employees</a>';
+                    echo '<a href="doctors.php">Doctors</a>';
+                    echo '<a href="prescriptions.php">Prescriptions</a>';
+                }
+            } else {
+                echo '<a href="login.php">Login</a>';
+                echo '<a href="register.php">Register</a>';
+            }
+            ?>
         </div>
         <div id="content" class="col-md-10">
             <div id="inner-content">
-                <h2>Content</h2>
+                <h2>Home</h2>
                 <p>
-                    Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
-                    Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
-                    Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+                    Welcome to the pharmacy! If you're already a member you can login with your
+                    credentials. If you're new to the pharmacy you can register as a customer, and
+                    then continue to place orders for prescriptions that you have written.
+                </p>
+                <p>
+                    For all doctors, by logging in you will be able to assign yourself to customers and write them prescriptions.
+                    You will also be able to register new medications in the system.
+                </p>
+                <p>
+                    For all employees, after logging in you will be able to create restock orders for medication, view all customers,
+                    and write prescriptions for them.
                 </p>
             </div>
         </div>
